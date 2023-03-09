@@ -6,7 +6,7 @@ No ownership or interest in AnyList by the author is implied by the creation of 
 
 ## Why this wrapper?
 
-AnyList is fantastic; they ship Mac, Apple IOS, and Android versions of their application. Desktop users other than Mac users are left with the web version, which requires a subscription to access. 
+AnyList is fantastic; they ship Mac, Apple IOS, and Android versions of their application. Desktop users other than Mac users are left with the web version, which requires a subscription to access. This wrapper does not bypass that requirement - it is simply a convenience for those who may wish to have an "app" rather than a webpage. 
 
 The web version of AnyList works quite well; however, I do not like leaving browser tabs pinned or creating site-specific browsers.
 
