@@ -15,3 +15,5 @@ This wrapper was developed on [EndeavourOS](https://www.endeavouros.com), an [Ar
 I do not build a Mac version because AnyList ships their own.
 
 I am not currently building a Windows version because I do not have a Windows PC available to build on or test with.
+
+## Wrapper only (C) 2023 by Steve Luzynski <steve@luzynski.net>
