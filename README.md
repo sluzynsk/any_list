@@ -14,6 +14,6 @@ This wrapper was developed on [EndeavourOS](https://www.endeavouros.com), an [Ar
 
 I do not build a Mac version because AnyList ships their own.
 
-I am not currently building a Windows version because I do not have a Windows PC available to build on or test with.
+I am working on a Windows release. This code will compile and run correctly under Windows 11; I have some more work to do to feel ready to call it a "release". Specifically it currently lives in both the taskbar and the tray, which I find displeasing. 
 
 ## Wrapper only (C) 2023 by Steve Luzynski <steve@luzynski.net>
