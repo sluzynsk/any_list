@@ -1,6 +1,6 @@
 #![cfg_attr(
-    all(not(debug_assertions), target_os = "windows"),
-    windows_subsystem = "windows"
+all(not(debug_assertions), target_os = "windows"),
+windows_subsystem = "windows"
 )]
 
 use tauri::Manager;
@@ -14,27 +14,46 @@ fn main() {
     let tray = SystemTray::new().with_menu(tray_menu);
     tauri::Builder::default()
         .system_tray(tray)
-        .on_system_tray_event(|app, event| if let SystemTrayEvent::MenuItemClick { id, .. } = event {
-            let item_handle = app.tray_handle().get_item(&id);
-            match id.as_str() {
-                "hide" => {
+        .on_system_tray_event(|app, event| {
+            match event {
+                SystemTrayEvent::LeftClick {
+                    position: _,
+                    size: _,
+                    ..
+                } => {
                     let window = app.get_window("main").unwrap();
                     match window.is_visible() {
                         Ok(flag) => match flag {
-                            true => {
-                                window.hide().unwrap();
-                                item_handle.set_title("Show").unwrap();
-                            }
-                            false => {
-                                window.show().unwrap();
-                                item_handle.set_title("Hide").unwrap();
-                            }
+                            true => window.hide().unwrap(),
+                            false => window.show().unwrap(),
                         },
                         Err(e) => println!("Error {:?}", e),
                     }
                 }
-                "quit" => {
-                    std::process::exit(0);
+                SystemTrayEvent::MenuItemClick { id, .. } => {
+                    let item_handle = app.tray_handle().get_item(&id);
+                    match id.as_str() {
+                        "hide" => {
+                            let window = app.get_window("main").unwrap();
+                            match window.is_visible() {
+                                Ok(flag) => match flag {
+                                    true => {
+                                        window.hide().unwrap();
+                                        item_handle.set_title("Show").unwrap();
+                                    }
+                                    false => {
+                                        window.show().unwrap();
+                                        item_handle.set_title("Hide").unwrap();
+                                    }
+                                },
+                                Err(e) => println!("Error {:?}", e),
+                            }
+                        }
+                        "quit" => {
+                            std::process::exit(0);
+                        }
+                        _ => {}
+                    }
                 }
                 _ => {}
             }

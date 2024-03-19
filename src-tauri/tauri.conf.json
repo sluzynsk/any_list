@@ -7,8 +7,8 @@
     "withGlobalTauri": true
   },
   "package": {
-    "productName": "any_list",
-    "version": "1.0.0"
+    "productName": "Any List",
+    "version": "1.1.0"
   },
   "tauri": {
     "allowlist": {
