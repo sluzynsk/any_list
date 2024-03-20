@@ -15,6 +15,12 @@ fn main() {
         .with_menu(tray_menu)
         .with_tooltip("Any List Desktop");
     tauri::Builder::default()
+        .plugin(tauri_plugin_single_instance::init(|app, argv, cwd| {
+            let window = app.get_window("main").unwrap();
+            window.show().unwrap();
+            window.set_focus().unwrap();
+            println!("{}, {argv:?}, {cwd}", app.package_info().name);
+        }))
         .system_tray(tray)
         .on_system_tray_event(|app, event| match event {
             SystemTrayEvent::LeftClick {
