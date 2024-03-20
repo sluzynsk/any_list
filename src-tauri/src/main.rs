@@ -11,7 +11,9 @@ fn main() {
     let quit = CustomMenuItem::new("quit".to_string(), "Quit");
     let hide = CustomMenuItem::new("hide".to_string(), "Hide");
     let tray_menu = SystemTrayMenu::new().add_item(hide).add_item(quit);
-    let tray = SystemTray::new().with_menu(tray_menu);
+    let tray = SystemTray::new()
+        .with_menu(tray_menu)
+        .with_tooltip("Any List Desktop");
     tauri::Builder::default()
         .system_tray(tray)
         .on_system_tray_event(|app, event| match event {
