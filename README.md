@@ -1,4 +1,4 @@
-# AnyList for Linux
+# AnyList Desktop for Windows and Linux
 
 This is a quick [Tauri](https://tauri.app) based wrapper around the excellent [AnyList](https://www.anylist.com) application.
 
@@ -6,14 +6,14 @@ No ownership or interest in AnyList by the author is implied by the creation of 
 
 ## Why this wrapper?
 
-AnyList is fantastic; they ship Mac, Apple IOS, and Android versions of their application. Desktop users other than Mac users are left with the web version, which requires a subscription to access. This wrapper does not bypass that requirement - it is simply a convenience for those who may wish to have an "app" rather than a webpage. 
+I really like AnyList. They currently ship Mac, Apple IOS, and Android versions of their application. Desktop users other than Mac users are left with the web version, which requires a subscription to access. This wrapper does not bypass that requirement - it is simply a convenience for those who may wish to have an "app" rather than a webpage. 
 
 The web version of AnyList works quite well; however, I do not like leaving browser tabs pinned or creating site-specific browsers.
 
-This wrapper was developed on [EndeavourOS](https://www.endeavouros.com), an [Arch Linux](https://www.archlinux.org) based distribution that has a nice GUI installer. The AppImage works on my system and the .deb runs correctly on Ubuntu 22.04. I have not tested any other releases because that is all I have kicking around the house.
+The AppImage and .deb run correctly on Ubuntu 22.04. I have not tested any other releases because that is all I have kicking around the house.
+
+I am working on a Windows release. This code will compile and run correctly under Windows 11; I am not testing on older versions.
 
 I do not build a Mac version because AnyList ships their own.
-
-I am working on a Windows release. This code will compile and run correctly under Windows 11; I have some more work to do to feel ready to call it a "release". Specifically it currently lives in both the taskbar and the tray, which I find displeasing. 
 
 ## Wrapper only (C) 2023 by Steve Luzynski <steve@luzynski.net>
