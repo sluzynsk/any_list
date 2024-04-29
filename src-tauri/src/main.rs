@@ -64,6 +64,13 @@ fn main() {
                 .values()
                 .next()
                 .expect("Sorry, no window found")
+                .show()
+                .expect("Can't Show Window");
+
+            windows
+                .values()
+                .next()
+                .expect("Sorry, no window found")
                 .set_focus()
                 .expect("Can't Bring Window to Focus");
         }))
