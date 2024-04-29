@@ -17,6 +17,7 @@ fn main() {
             let tray_menu = MenuBuilder::new(app).items(&[&hide, &quit]).build()?;
             let _tray = TrayIconBuilder::new()
                 .menu(&tray_menu)
+                .icon(app.default_window_icon().cloned().unwrap())
                 .tooltip("Any List Desktop")
                 .on_menu_event(move |app, event| match event.id().as_ref() {
                     "hide" => {
