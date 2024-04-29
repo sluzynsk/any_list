@@ -4,77 +4,84 @@
 )]
 
 use tauri::Manager;
-use tauri::SystemTray;
-use tauri::{CustomMenuItem, SystemTrayEvent, SystemTrayMenu};
+use tauri::{
+    menu::{MenuBuilder, MenuItemBuilder},
+    tray::TrayIconBuilder,
+};
 
 fn main() {
-    let quit = CustomMenuItem::new("quit".to_string(), "Quit");
-    let hide = CustomMenuItem::new("hide".to_string(), "Hide");
-    let tray_menu = SystemTrayMenu::new().add_item(hide).add_item(quit);
-    let tray = SystemTray::new()
-        .with_menu(tray_menu)
-        .with_tooltip("Any List Desktop");
     tauri::Builder::default()
-        .plugin(tauri_plugin_single_instance::init(|app, argv, cwd| {
-            let window = app.get_window("main").unwrap();
-            window.show().unwrap();
-            window.set_focus().unwrap();
-            println!("{}, {argv:?}, {cwd}", app.package_info().name);
-        }))
-        .system_tray(tray)
-        .on_system_tray_event(|app, event| match event {
-            SystemTrayEvent::LeftClick {
-                position: _,
-                size: _,
-                ..
-            } => {
-                let window = app.get_window("main").unwrap();
-                match window.is_visible() {
-                    Ok(flag) => match flag {
-                        true => window.hide().unwrap(),
-                        false => {
-                            window.show().unwrap();
-                            window.set_focus().unwrap()
-                        }
-                    },
-                    Err(e) => println!("Error {:?}", e),
-                }
-            }
-            SystemTrayEvent::MenuItemClick { id, .. } => {
-                let item_handle = app.tray_handle().get_item(&id);
-                match id.as_str() {
+        .setup(|app| {
+            let quit = MenuItemBuilder::with_id("quit", "Quit").build(app)?;
+            let hide = MenuItemBuilder::with_id("hide", "Hide").build(app)?;
+            let tray_menu = MenuBuilder::new(app).items(&[&hide, &quit]).build()?;
+            let _tray = TrayIconBuilder::new()
+                .menu(&tray_menu)
+                .tooltip("Any List Desktop")
+                .on_menu_event(move |app, event| match event.id().as_ref() {
                     "hide" => {
-                        let window = app.get_window("main").unwrap();
-                        match window.is_visible() {
-                            Ok(flag) => match flag {
-                                true => {
-                                    window.hide().unwrap();
-                                    item_handle.set_title("Show").unwrap();
-                                }
-                                false => {
-                                    window.show().unwrap();
-                                    window.set_focus().unwrap();
-                                    item_handle.set_title("Hide").unwrap();
-                                }
-                            },
-                            Err(e) => println!("Error {:?}", e),
+                        if let Some(webview_window) = app.get_webview_window("main") {
+                            match webview_window.is_visible() {
+                                Ok(flag) => match flag {
+                                    true => {
+                                        webview_window.hide().unwrap();
+                                        tray_menu
+                                            .get(event.id().as_ref())
+                                            .expect("Something bad has happened.")
+                                            .as_menuitem()
+                                            .expect("Something bad has happened.")
+                                            .set_text("Show")
+                                            .unwrap();
+                                    }
+                                    false => {
+                                        webview_window.show().unwrap();
+                                        webview_window.set_focus().unwrap();
+                                        tray_menu
+                                            .get(event.id().as_ref())
+                                            .expect("Something bad has happened.")
+                                            .as_menuitem()
+                                            .expect("Something bad has happened.")
+                                            .set_text("Hide")
+                                            .unwrap();
+                                    }
+                                },
+                                Err(e) => println!("Error {:?}", e),
+                            }
                         }
                     }
                     "quit" => {
                         std::process::exit(0);
                     }
-                    _ => {}
-                }
-            }
-            _ => {}
+                    _ => (),
+                })
+                .build(app)?;
+            Ok(())
         })
-        .on_window_event(|event| match event.event() {
+        .plugin(tauri_plugin_single_instance::init(|app, _argv, _cwd| {
+            let windows = app.webview_windows();
+
+            windows
+                .values()
+                .next()
+                .expect("Sorry, no window found")
+                .set_focus()
+                .expect("Can't Bring Window to Focus");
+        }))
+        .on_window_event(|window, event| match event {
             tauri::WindowEvent::CloseRequested { api, .. } => {
-                event.window().hide().unwrap();
+                if let Some (menu) = window.menu() {
+                    menu.get("hide")
+                        .expect("Something bad has happened.")
+                        .as_menuitem()
+                        .expect("Something bad has happened.")
+                        .set_text("Show")
+                        .unwrap();
+                }
+                window.hide().unwrap();
                 api.prevent_close();
             }
             _ => {}
         })
         .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .expect("Error while running application");
 }
