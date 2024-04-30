@@ -64,7 +64,8 @@ fn main() {
                         }
                     }
                 })
-                .icon(Image::from_path("../icons/icon.png")?)
+                //.icon(Image::from_path("../icons/icon.png")?)
+                .icon(Image::from_bytes(include_bytes!("../icons/icon.png"))?)
                 .icon_as_template(true)
                 .build(app)?;
             Ok(())
