@@ -3,10 +3,11 @@
     windows_subsystem = "windows"
 )]
 
+use tauri::image::Image;
 use tauri::Manager;
 use tauri::{
     menu::{MenuBuilder, MenuItemBuilder},
-    tray::TrayIconBuilder,
+    tray::{ClickType, TrayIconBuilder},
 };
 
 fn main() {
@@ -17,7 +18,6 @@ fn main() {
             let tray_menu = MenuBuilder::new(app).items(&[&hide, &quit]).build()?;
             let _tray = TrayIconBuilder::new()
                 .menu(&tray_menu)
-                .icon(app.default_window_icon().cloned().unwrap())
                 .tooltip("Any List Desktop")
                 .on_menu_event(move |app, event| match event.id().as_ref() {
                     "hide" => {
@@ -55,6 +55,17 @@ fn main() {
                     }
                     _ => (),
                 })
+                .on_tray_icon_event(|tray, event| {
+                    if event.click_type == ClickType::Left {
+                        let app = tray.app_handle();
+                        if let Some(webview_window) = app.get_webview_window("main") {
+                            let _ = webview_window.show();
+                            let _ = webview_window.set_focus();
+                        }
+                    }
+                })
+                .icon(Image::from_path("../icons/icon.png")?)
+                .icon_as_template(true)
                 .build(app)?;
             Ok(())
         })
@@ -77,7 +88,7 @@ fn main() {
         }))
         .on_window_event(|window, event| match event {
             tauri::WindowEvent::CloseRequested { api, .. } => {
-                if let Some (menu) = window.menu() {
+                if let Some(menu) = window.menu() {
                     menu.get("hide")
                         .expect("Something bad has happened.")
                         .as_menuitem()
