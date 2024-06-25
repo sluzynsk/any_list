@@ -10,11 +10,9 @@ I really like AnyList. They currently ship Mac, Apple IOS, and Android versions 
 
 The web version of AnyList works quite well; however, I do not like leaving browser tabs pinned or creating site-specific browsers.
 
-The AppImage and .deb run correctly on Ubuntu 22.04. On 24.04, you will need to run the AppImage as the .deb has dependency issues. I've resolved those issues in release 1.2, but that is not yet ready for release.
+The AppImage and .deb run correctly on Ubuntu 22.04 and 24.04. I'm working on an AUR release for Arch; stand by for that.
 
-I am working on a Windows release. This code will compile and run correctly under Windows 11; I am not testing on older versions.
-
-The tauri2.0-beta branch is tagged to release 1.2. I am holding this release as a source-only release until Tauri 2.0 comes out of beta, so you will have to build it yourself. No new features, it just moves to the v2 Tauri release.
+This code will compile and run correctly under Windows 11; I am not testing on older versions.
 
 I do not build a Mac version because AnyList ships their own.
 
