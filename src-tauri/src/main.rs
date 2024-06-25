@@ -6,65 +6,45 @@
 use tauri::image::Image;
 use tauri::Manager;
 use tauri::{
-    menu::{MenuBuilder, MenuItemBuilder},
-    tray::{ClickType, TrayIconBuilder},
+    menu::{Menu, MenuItem},
+    tray::{TrayIconBuilder},
 };
 
 fn main() {
     tauri::Builder::default()
         .setup(|app| {
-            let quit = MenuItemBuilder::with_id("quit", "Quit").build(app)?;
-            let hide = MenuItemBuilder::with_id("hide", "Hide").build(app)?;
-            let tray_menu = MenuBuilder::new(app).items(&[&hide, &quit]).build()?;
-            let _tray = TrayIconBuilder::new()
+            let toggle_i = MenuItem::with_id(app, "toggle", "Toggle", true, None::<&str>)?;
+            let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
+            let tray_menu = Menu::with_items(
+                app,
+                &[
+                    &toggle_i,
+                    &quit_i,
+                ],
+            )?;
+            let _ = TrayIconBuilder::with_id("tray-1")
                 .menu(&tray_menu)
                 .tooltip("Any List Desktop")
+                .menu_on_left_click(false)
                 .on_menu_event(move |app, event| match event.id().as_ref() {
-                    "hide" => {
+                    "toggle" => {
                         if let Some(webview_window) = app.get_webview_window("main") {
-                            match webview_window.is_visible() {
-                                Ok(flag) => match flag {
-                                    true => {
-                                        webview_window.hide().unwrap();
-                                        tray_menu
-                                            .get(event.id().as_ref())
-                                            .expect("Something bad has happened.")
-                                            .as_menuitem()
-                                            .expect("Something bad has happened.")
-                                            .set_text("Show")
-                                            .unwrap();
-                                    }
-                                    false => {
-                                        webview_window.show().unwrap();
-                                        webview_window.set_focus().unwrap();
-                                        tray_menu
-                                            .get(event.id().as_ref())
-                                            .expect("Something bad has happened.")
-                                            .as_menuitem()
-                                            .expect("Something bad has happened.")
-                                            .set_text("Hide")
-                                            .unwrap();
-                                    }
-                                },
-                                Err(e) => println!("Error {:?}", e),
-                            }
+                            let new_title = if webview_window.is_visible().unwrap_or_default() {
+                                let _ = webview_window.hide();
+                                "Show"
+                            } else {
+                                let _ = webview_window.show();
+                                let _ = webview_window.set_focus();
+                                "Hide"
+                            };
+                            toggle_i.set_text(new_title).unwrap();
                         }
                     }
                     "quit" => {
-                        std::process::exit(0);
+                        app.exit(0);
                     }
                     _ => (),
                 })
-                .on_tray_icon_event(|tray, event| {
-                    if event.click_type == ClickType::Left {
-                        let app = tray.app_handle();
-                        if let Some(webview_window) = app.get_webview_window("main") {
-                            let _ = webview_window.show();
-                            let _ = webview_window.set_focus();
-                        }
-                    }
-                })
-                //.icon(Image::from_path("../icons/icon.png")?)
                 .icon(Image::from_bytes(include_bytes!("../icons/icon.png"))?)
                 .icon_as_template(true)
                 .build(app)?;
@@ -90,12 +70,13 @@ fn main() {
         .on_window_event(|window, event| match event {
             tauri::WindowEvent::CloseRequested { api, .. } => {
                 if let Some(menu) = window.menu() {
-                    menu.get("hide")
+                    menu.get("toggle")
                         .expect("Something bad has happened.")
                         .as_menuitem()
                         .expect("Something bad has happened.")
                         .set_text("Show")
                         .unwrap();
+                    // #TODO this doesn't work yet. Menu title is out of sync until toggled again.
                 }
                 window.hide().unwrap();
                 api.prevent_close();
