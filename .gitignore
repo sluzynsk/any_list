@@ -26,3 +26,4 @@ dist-ssr
 # outputs
 src-tauri/target*
 target/*
+.flatpak-builder/*

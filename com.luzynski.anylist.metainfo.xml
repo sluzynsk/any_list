@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2024 Steve Luzynski <steve@luzynski.net> -->
+<component type="desktop-application">
+  <id>com.luzynski.anylist</id>
+  
+  <name>Any List Desktop</name>
+  <summary>A standalone application for Any List (www.anylist.com)</summary>
+  
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT-open-group</project_license>
+  
+  <description>
+    <p>
+      This is a standalone version of the Any List application found at www.anylist.com. This replaces the need for leaving a browser tab open on Linux and Windows; the makers of Any List already provide a Mac application.
+    </p>
+    <p>
+      This application requires a paid Any List subscription to function.
+    </p>
+  </description>
+  
+  <launchable type="desktop-id">com.luzynski.anylist.desktop</launchable>
+  <url type="homepage">https://github.com/sluzynsk/any_list</url>
+  <developer id="com.luzynski">
+    <name>Steve Luzynski</name>
+  </developer>
+  <content_rating type="oars-1.1" />
+</component>
