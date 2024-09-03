@@ -5,23 +5,21 @@
 
 use tauri::image::Image;
 use tauri::Manager;
-use tauri::{
-    menu::{Menu, MenuItem},
-    tray::{TrayIconBuilder},
-};
+use tauri::menu::{MenuBuilder, MenuItem};
+use tauri::tray::TrayIconBuilder;
 
 fn main() {
     tauri::Builder::default()
         .setup(|app| {
+            let title_i = MenuItem::with_id(app, "title", "Any List", false, None::<&str>)?;
             let toggle_i = MenuItem::with_id(app, "toggle", "Toggle", true, None::<&str>)?;
             let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
-            let tray_menu = Menu::with_items(
-                app,
-                &[
-                    &toggle_i,
-                    &quit_i,
-                ],
-            )?;
+            let tray_menu = MenuBuilder::new(app)
+                .item(&title_i)
+                .separator()
+                .item(&toggle_i)
+                .item(&quit_i)
+                .build()?;
             let _ = TrayIconBuilder::with_id("tray-1")
                 .menu(&tray_menu)
                 .tooltip("Any List Desktop")
