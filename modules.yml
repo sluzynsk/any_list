@@ -1,0 +1,6 @@
+name: modules
+buildsystem: simple
+build-commands: []
+modules:
+  - shared-modules/libappindicator/libappindicator-gtk3-12.10.json
+

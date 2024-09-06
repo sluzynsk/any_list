@@ -1,18 +1,25 @@
 id: com.luzynski.anylist
 
+#runtime: org.freedesktop.Platform
+#runtime-version: "23.08"
+#sdk: org.freedesktop.Sdk
+#
 runtime: org.gnome.Platform
-runtime-version: '46'
+runtime-version: "46"
 sdk: org.gnome.Sdk
 
-command: tauri-app
+command: any_list
 finish-args:
   - --socket=wayland # Permission needed to show the window
   - --socket=fallback-x11 # Permission needed to show the window
   - --device=dri # OpenGL, not necessary for all projects
   - --share=ipc
   - --share=network
+  - --talk-name=org.kde.StatusNotifierWatcher
 
 modules:
+  - modules.yml
+
   - name: binary
     buildsystem: simple
     sources:
@@ -28,9 +35,9 @@ modules:
       - install -Dm0644 com.luzynski.anylist.metainfo.xml -t ${FLATPAK_DEST}/share/metainfo/
       - ar -x *.deb
       - tar -xf data.tar.gz
-      - 'install -Dm755 usr/bin/any_list /app/bin/any_list'
+      - install -Dm755 usr/bin/any_list /app/bin/any_list
       - install -Dm644 usr/share/applications/any_list.desktop /app/share/applications/com.luzynski.anylist.desktop
-      - install -Dm644 usr/share/icons/hicolor/128x128/apps/any_list.png /app/share/icons/hicolor/128x128/apps/com.luzynski.anylist.png
-      - install -Dm644 usr/share/icons/hicolor/32x32/apps/any_list.png /app/share/icons/hicolor/32x32/apps/com.luzynski.anylist.png
-      - install -Dm644 usr/share/icons/hicolor/256x256@2/apps/any_list.png /app/share/icons/hicolor/256x256@2/apps/com.luzynski.anylist.png
+      - install -Dm644 usr/share/icons/hicolor/128x128/apps/any_list.png -t /app/share/icons/hicolor/128x128/apps/
+      - install -Dm644 usr/share/icons/hicolor/32x32/apps/any_list.png -t /app/share/icons/hicolor/32x32/apps/
+      - install -Dm644 usr/share/icons/hicolor/256x256@2/apps/any_list.png -t /app/share/icons/hicolor/256x256@2/apps/
       - install -Dm644 com.luzynski.anylist.metainfo.xml /app/share/metainfo/com.luzynski.anylist.metainfo.xml
