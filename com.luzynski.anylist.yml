@@ -24,7 +24,7 @@ modules:
     buildsystem: simple
     sources:
       - type: file
-        url: https://github.com/sluzynsk/any_list/releases/download/v1.2.0/Any.List_1.2.0_amd64.deb
+        url: https://github.com/sluzynsk/any_list/releases/download/v1.3.0/Any.List_1.3.0_amd64.deb
         sha256: 3361c9433688e37fa1878d7ae3ba7169072f6c3f1ed0cd8949a4335a52b1f6e6 # This is required if you are using a remote source
         only-arches: [x86_64] #This source is only used on x86_64 Computers
         # This path points to the binary file which was created in the .deb bundle.

@@ -7,12 +7,18 @@ use tauri::image::Image;
 use tauri::Manager;
 use tauri::menu::{MenuBuilder, MenuItem};
 use tauri::tray::TrayIconBuilder;
+use std::sync::Arc;
+use std::sync::Mutex;
 
 fn main() {
+    let toggle_item = Arc::new(Mutex::new(None));
+    let toggle_item_clone = toggle_item.clone();
+
     tauri::Builder::default()
-        .setup(|app| {
+        .setup(move |app| {
             let title_i = MenuItem::with_id(app, "title", "Any List", false, None::<&str>)?;
             let toggle_i = MenuItem::with_id(app, "toggle", "Toggle", true, None::<&str>)?;
+            *toggle_item.lock().unwrap() = Some(toggle_i.clone());
             let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
             let tray_menu = MenuBuilder::new(app)
                 .item(&title_i)
@@ -46,6 +52,7 @@ fn main() {
                 .icon(Image::from_bytes(include_bytes!("../icons/icon.png"))?)
                 .icon_as_template(true)
                 .build(app)?;
+
             Ok(())
         })
         .plugin(tauri_plugin_single_instance::init(|app, _argv, _cwd| {
@@ -65,18 +72,14 @@ fn main() {
                 .set_focus()
                 .expect("Can't Bring Window to Focus");
         }))
-        .on_window_event(|window, event| match event {
+        .on_window_event(move |event_window, event| match event {
             tauri::WindowEvent::CloseRequested { api, .. } => {
-                if let Some(menu) = window.menu() {
-                    menu.get("toggle")
-                        .expect("Something bad has happened.")
-                        .as_menuitem()
-                        .expect("Something bad has happened.")
-                        .set_text("Show")
-                        .unwrap();
-                    // #TODO this doesn't work yet. Menu title is out of sync until toggled again.
+                if let Some(toggle_menu_item) = &*toggle_item_clone.lock().unwrap() {
+                    let _ = toggle_menu_item.set_text("Show");
                 }
-                window.hide().unwrap();
+
+   
+                event_window.hide().unwrap();
                 api.prevent_close();
             }
             _ => {}
