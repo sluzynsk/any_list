@@ -8,9 +8,9 @@ No ownership or interest in AnyList by the author is implied by the creation of 
 
 I really like AnyList. They currently ship Mac, Apple IOS, and Android versions of their application. Desktop users other than Mac users are left with the web version, which requires a subscription to access. This wrapper does not bypass that requirement - it is simply a convenience for those who may wish to have an "app" rather than a webpage. 
 
-The web version of AnyList works quite well; however, I do not like leaving browser tabs pinned or creating site-specific browsers.
+The web version of AnyList works quite well; however, I do not like leaving browser tabs pinned.
 
-The AppImage and .deb run correctly on Ubuntu 22.04 and 24.04. I'm working on an AUR release for Arch; stand by for that.
+The AppImage and .deb run correctly on Ubuntu 22.04 and 24.04.
 
 This code will compile and run correctly under Windows 11; I am not testing on older versions.
 
